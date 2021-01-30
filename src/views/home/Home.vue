@@ -3,6 +3,11 @@
     <nav-bar class="home-nav">
       <div slot="center">长安优购</div>
     </nav-bar>
+    <tab-control ref="tabControl2"  :titles='["流行","新款","精选"]'
+                 @tabClick="tabClick"
+                 v-show="isTabFixed"
+                 class="tab-control"
+    ></tab-control>
     <scroll class="content"
             ref="scroll"
             :probe-type="3"
@@ -10,11 +15,14 @@
             :pull-up-load="true"
             @pullingUp="loadMore"
     >
-      <home-swiper :banners="banners"></home-swiper>
+      <home-swiper @swiperImageLoad="swiperImageLoad" :banners="banners"></home-swiper>
       <recommend-view :recommends="recommends"></recommend-view>
       <feature-view></feature-view>
-      <tab-control class="tab-control" :titles='["流行","新款","精选"]'
-                   @tabClick="tabClick"
+      <tab-control
+        ref="tabControl"
+        :titles='["流行","新款","精选"]'
+         @tabClick="tabClick"
+
       ></tab-control>
       <goods-list :goods="showGoods"></goods-list>
     </scroll>
@@ -65,6 +73,9 @@ export default {
       },
       currentType:'pop',
       isShowBackTop:true,
+      tabOffsetTop:0,
+      isTabFixed:false,
+      saveY:0,
     }
   },
   //生命周期函数
@@ -76,6 +87,27 @@ export default {
      this.getHomeGoods('new')
      this.getHomeGoods('sell')
 
+
+  },
+  //创建后
+  mounted() {
+    //用到了事件总线
+    //监听item图片加载完成
+    const refresh= this.debounce(this.$refs.scroll.refresh,200)
+
+    this.$bus.$on('itemImgLoad',()=>{
+      refresh()
+    })
+
+  },
+  //活跃时
+  activated() {
+    this.$refs.scroll.scrollTo(0,this.saveY,0)
+    this.$refs.scroll.refresh()
+  },
+  //离开时
+  deactivated() {
+    this.saveY=this.$refs.scroll.getScrollY()
   },
   computed:{
     showGoods(){
@@ -83,7 +115,18 @@ export default {
     }
   },
   methods:{
+
     //事件监听相关
+    debounce(func,delay){
+      let timer=null
+      return function (...args){
+        if(timer) clearTimeout(timer)
+        timer=setTimeout(()=>{
+          func.apply(this,args)
+        },delay)
+      }
+    },
+
     tabClick(index){
       switch(index){
       case 0:
@@ -95,6 +138,7 @@ export default {
       case 2:
         this.currentType='sell'
       }
+      this.$refs.tabControl2.currentIndex=index
     },
 
 
@@ -111,11 +155,12 @@ export default {
     getHomeGoods(type){
       const page=this.goods[type].page+1
       getHomeGoods(type,page).then(res=>{
-
+        // console.log(res);
         //注意...语法
         this.goods[type].list.push(...res.data.list)
         this.goods[type].page+=1
 
+        //完成了上拉加载更多
         this.$refs.scroll.finishPullUp()
 
       })
@@ -126,37 +171,51 @@ export default {
     },
 
     contentScroll(position){
+     // 判断backTop是否显示
      this.isShowBackTop=(-position.y)>1000
+
+    //  决定tab-control是否吸顶
+      this.isTabFixed=(-position.y)>this.tabOffsetTop
     },
     loadMore(){
       this.getHomeGoods(this.currentType)
       console.log("加载");
-    }
+    },
+    swiperImageLoad(){
+      this.tabOffsetTop=this.$refs.tabControl.$el.offsetTop
+
+    },
   }
 }
 </script>
 
 <style scoped>
 #home{
-  padding-top: 44px;
+  /*padding-top: 44px;*/
+  height: 100vh;
+  position: relative;
 }
 .home-nav{
   background-color: var(--color-tint);
   color: white;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  /*position: fixed;*/
+  /*top: 0;*/
+  /*left: 0;*/
+  /*right: 0;*/
   z-index: 99;
 }
 .tab-control {
-  position: sticky;
-  top: 44px;
-  z-index: 9;
+  position: relative;
+  z-index: 999;
   background-color: white;
 }
 .content{
-  height:calc(100vh - 93px);
   overflow: hidden;
+  position: absolute;
+  top: 44px;
+  bottom: 49px;
+  left: 0;
+  right: 0;
 }
+
 </style>
