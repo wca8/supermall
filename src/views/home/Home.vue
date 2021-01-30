@@ -76,6 +76,7 @@ export default {
       tabOffsetTop:0,
       isTabFixed:false,
       saveY:0,
+      itemImgListener:null,
     }
   },
   //生命周期函数
@@ -94,10 +95,10 @@ export default {
     //用到了事件总线
     //监听item图片加载完成
     const refresh= this.debounce(this.$refs.scroll.refresh,200)
-
-    this.$bus.$on('itemImgLoad',()=>{
+    this.itemImgListener=()=>{
       refresh()
-    })
+    }
+    this.$bus.$on('itemImgLoad',this.itemImgListener)
 
   },
   //活跃时
@@ -108,6 +109,11 @@ export default {
   //离开时
   deactivated() {
     this.saveY=this.$refs.scroll.getScrollY()
+
+  //  取消全局事件的监听
+    this.$bus.$off('itemImgLoad',this.itemImgListener)
+
+
   },
   computed:{
     showGoods(){
