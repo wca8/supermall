@@ -1,14 +1,16 @@
 <template>
   <div id="detail">
-    <detail-nav-bar class="detail-nav"></detail-nav-bar>
+    <detail-nav-bar class="detail-nav"
+                    @titleClick="titleClick"
+    ></detail-nav-bar>
     <scroll ref="scroll" class="scroll">
       <detail-swiper :top-image="topImage"></detail-swiper>
       <detail-base-info :goods="goods"></detail-base-info>
       <detail-shop-info :shop="shop"></detail-shop-info>
       <detail-goods-info @imageLoad="imageLoad" :detailInfo="detailInfo"></detail-goods-info>
-      <detail-param-info :param-info="paramInfo"/>
-      <detail-comment-info :comment-info="commentInfo"></detail-comment-info>
-      <goods-list :goods="recommends"></goods-list>
+      <detail-param-info ref="params"  :param-info="paramInfo"/>
+      <detail-comment-info ref="comment" :comment-info="commentInfo"></detail-comment-info>
+      <goods-list ref="recommend" :goods="recommends"></goods-list>
     </scroll>
 
   </div>
@@ -26,6 +28,7 @@ import DetailParamInfo from "@/views/detail/childComps/DetailParamInfo";
 import DetailCommentInfo from "@/views/detail/childComps/DetailCommentInfo";
 import GoodsList from "@/components/content/goods/GoodsList";
 import {debounce} from "@/common/utils";
+import {itemListenerMixin} from "@/common/mixin";
 
 export default {
   name: "Detail",
@@ -40,6 +43,7 @@ export default {
     DetailCommentInfo,
     GoodsList,
   },
+  mixins:[itemListenerMixin],
   data(){
     return{
       iid:null,
@@ -50,7 +54,8 @@ export default {
       paramInfo: {},
       commentInfo:{},
       recommends:[],
-      itemImgListener:null,
+      themeTopY:[]
+
     }
   },
   //销毁时
@@ -60,11 +65,15 @@ export default {
   mounted() {
     //用到了事件总线
     //监听item图片加载完成
-    const refresh= debounce(this.$refs.scroll.refresh,200)
-    this.itemImgListener=()=>{
-      refresh()
-    }
-    this.$bus.$on('itemImgLoad',this.itemImgListener)
+
+  },
+  updated() {
+    this.themeTopY=[]
+    this.themeTopY.push(0)
+    this.themeTopY.push(this.$refs.params.$el.offsetTop)
+    this.themeTopY.push(this.$refs.comment.$el.offsetTop)
+    this.themeTopY.push(this.$refs.recommend.$el.offsetTop)
+    console.log(this.themeTopY);
   },
   created() {
     //1 保存传入的iid
@@ -114,7 +123,11 @@ export default {
     imageLoad(){
 
       this.$refs.scroll.refresh()
-    }
+    },
+    titleClick(index){
+      console.log(index);
+      this.$refs.scroll.scrollTo(0,y,200)
+    },
   }
 }
 </script>

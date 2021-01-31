@@ -43,6 +43,7 @@ import GoodsList from "@/components/content/goods/GoodsList";
 import {getHomeMultidata,getHomeGoods} from "@/network/home";
 import Scroll from "@/components/common/scroll/Scroll";
 import BackTop from "@/components/content/backTop/BackTop";
+import {itemListenerMixin} from "@/common/mixin";
 
 export default {
   name: "Home",
@@ -56,6 +57,7 @@ export default {
     Scroll,
     BackTop,
   },
+  mixins:[itemListenerMixin],
   data(){
     return{
       banners:[],
@@ -76,7 +78,7 @@ export default {
       tabOffsetTop:0,
       isTabFixed:false,
       saveY:0,
-      itemImgListener:null,
+
     }
   },
   //生命周期函数
@@ -94,11 +96,7 @@ export default {
   mounted() {
     //用到了事件总线
     //监听item图片加载完成
-    const refresh= this.debounce(this.$refs.scroll.refresh,200)
-    this.itemImgListener=()=>{
-      refresh()
-    }
-    this.$bus.$on('itemImgLoad',this.itemImgListener)
+
 
   },
   //活跃时
