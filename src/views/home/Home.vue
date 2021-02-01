@@ -27,6 +27,7 @@
       <goods-list :goods="showGoods"></goods-list>
     </scroll>
     <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
+
   </div>
 </template>
 
@@ -74,7 +75,7 @@ export default {
         }
       },
       currentType:'pop',
-      isShowBackTop:true,
+      isShowBackTop:false,
       tabOffsetTop:0,
       isTabFixed:false,
       saveY:0,
