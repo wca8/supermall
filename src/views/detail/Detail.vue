@@ -164,12 +164,18 @@ export default {
       // })
     // 方法二
       this.addCart(product).then(res=>{
-        this.show=true
-        this.message=res
-        setTimeout(()=>{
-          this.show=false
-          this.message=''
-        },2000)
+        //方法一
+        // this.show=true
+        // this.message=res
+        // setTimeout(()=>{
+        //   this.show=false
+        //   this.message=''
+        // },2000)
+
+
+      //  方法二
+        this.$toast.show(res,2000)
+
       })
 
 

@@ -1,36 +1,55 @@
 <template>
-  <div v-show="show" class="toast">
-    <div >{{message}}</div>
+  <div class="toast" v-show="isShow">
+    <div class="message">{{ this.message }}</div>
   </div>
 </template>
 
 <script>
 export default {
   name: "Toast",
-  props:{
-    message:{
-      type:String,
-      default:''
-    },
-    show:{
-      type:Boolean,
-      default:false
+  props: {
+    // message: {
+    //   type: String,
+    //   default: ''
+    // },
+    // isShow: {
+    //   type: Boolean,
+    //   default: false
+    // }
+  },
+  data() {
+    return {
+      message: '',
+      isShow: false
+    }
+  },
+  methods: {
+    show(message = '默认文字', duration = 2000) {
+      this.isShow = true;
+      this.message = message;
+
+      setTimeout(() => {
+        this.isShow = false;
+        this.message = '';
+      }, duration)
     }
   }
 }
 </script>
 
 <style scoped>
-.toast{
+.toast {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%);
-  background: rgb(0,0,0,0.6);
-  color: white;
+  transform: translate(-50%, -50%);
+  padding:10px;
   z-index: 999;
-  padding: 15px;
-  border-radius: 10px;
+  border-radius: 15px;
+  color: white;
+  background-color: rgba(0, 0, 0, .6);
+}
+.message{
   white-space: nowrap;
 }
 </style>
