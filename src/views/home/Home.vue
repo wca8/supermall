@@ -97,7 +97,9 @@ export default {
   mounted() {
     //用到了事件总线
     //监听item图片加载完成
-
+    // this.$bus.on('itemImgLoad',()=>{
+    //   this.$refs.scroll.refresh()
+    // })
 
   },
   //活跃时
@@ -122,15 +124,18 @@ export default {
   methods:{
 
     //事件监听相关
-    debounce(func,delay){
-      let timer=null
-      return function (...args){
-        if(timer) clearTimeout(timer)
-        timer=setTimeout(()=>{
-          func.apply(this,args)
-        },delay)
-      }
-    },
+    debounce(func, delay){
+      let timer = null;
+
+      return function (...args) {
+         if(timer) {
+            clearTimeout(timer);
+        }
+        timer = setTimeout(() => {
+         func.apply(this, args);
+      }, delay)
+   }
+},
 
     tabClick(index){
       switch(index){
@@ -184,7 +189,7 @@ export default {
     },
     loadMore(){
       this.getHomeGoods(this.currentType)
-      console.log("加载");
+      console.log("上拉加载更多");
     },
     swiperImageLoad(){
       this.tabOffsetTop=this.$refs.tabControl.$el.offsetTop

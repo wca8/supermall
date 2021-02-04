@@ -1,5 +1,5 @@
 <template>
-  <h2>个人(紧急开发中)</h2>
+  <h2>个人中心</h2>
 </template>
 
 <script>

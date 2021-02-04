@@ -1,10 +1,10 @@
 <template>
   <div @click="itemClick" class="goods-item">
 <!--    v-lazy懒加载-->
-   <img @load="imageLoad" v-lazy="showImage" alt="">
+   <img @load="imageLoad" :src="showImage" alt="">
     <div class="goods-info">
       <p>{{goodItem.title}}</p>
-      <span class="price">￥{{goodItem.price}}</span>
+      <span class="price">￥ {{goodItem.price}}</span>
       <span class="collect">★{{goodItem.cfav}}</span>
     </div>
   </div>
