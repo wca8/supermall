@@ -11,8 +11,8 @@ export function request(config) {
   // 2.1.请求拦截的作用
   instance.interceptors.request.use(config => {
     return config
-  }, err => {
-    // console.log(err);
+  }, (err) => {
+    console.log(err);
   })
 
   // 2.2.响应拦截

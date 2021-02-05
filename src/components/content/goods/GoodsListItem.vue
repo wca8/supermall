@@ -1,7 +1,7 @@
 <template>
   <div @click="itemClick" class="goods-item">
 <!--    v-lazy懒加载-->
-   <img @load="imageLoad" :src="showImage" alt="">
+   <img  v-lazy="showImage" @load="imageLoad" alt="">
     <div class="goods-info">
       <p>{{goodItem.title}}</p>
       <span class="price">￥ {{goodItem.price}}</span>
@@ -28,6 +28,7 @@ export default {
   },
   methods:{
     imageLoad(){
+
       this.$bus.$emit('itemImgLoad')
     },
     itemClick(){

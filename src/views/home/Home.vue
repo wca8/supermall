@@ -8,7 +8,7 @@
                  v-show="isTabFixed"
                  class="tab-control"
     ></tab-control>
-    <scroll class="content"
+    <Scroll class="content"
             ref="scroll"
             :probe-type="3"
             @scroll="contentScroll"
@@ -25,7 +25,7 @@
 
       ></tab-control>
       <goods-list :goods="showGoods"></goods-list>
-    </scroll>
+    </Scroll>
     <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
 
   </div>
@@ -147,6 +147,7 @@ export default {
         break;
       case 2:
         this.currentType='sell'
+              break;
       }
       this.$refs.tabControl2.currentIndex=index
     },
@@ -154,7 +155,7 @@ export default {
 
 
     //网络请求相关代码
-    getHomeMultidata(){
+     getHomeMultidata(){
       getHomeMultidata().then(res =>{
         // console.log(res);
         this.banners=res.data.banner.list;
@@ -165,13 +166,11 @@ export default {
     getHomeGoods(type){
       const page=this.goods[type].page+1
       getHomeGoods(type,page).then(res=>{
-        // console.log(res);
+
         //注意...语法
         this.goods[type].list.push(...res.data.list)
         this.goods[type].page+=1
-
-        //完成了上拉加载更多
-        this.$refs.scroll.finishPullUp()
+        // console.log(this.goods[type].page);
 
       })
     },
@@ -189,7 +188,10 @@ export default {
     },
     loadMore(){
       this.getHomeGoods(this.currentType)
-      console.log("上拉加载更多");
+      //完成了上拉加载更多
+      this.$refs.scroll.finishPullUp()
+
+      this.$refs.scroll.refresh()
     },
     swiperImageLoad(){
       this.tabOffsetTop=this.$refs.tabControl.$el.offsetTop

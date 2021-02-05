@@ -1,16 +1,13 @@
 //debounce 防抖动
-export function debounce(func, delay){
+export function debounce(func, delay) {
   let timer = null;
-
   return function (...args) {
-    if(timer) {
-      clearTimeout(timer);
-    }
+    if (timer) clearTimeout(timer);
     timer = setTimeout(() => {
       func.apply(this, args);
-    }, delay)
-  }
-};
+    }, delay);
+  };
+}
 
 // 时间戳转换
 export function formatDate(date, fmt) {
