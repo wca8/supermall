@@ -1,7 +1,7 @@
 <template>
  <div>
     <nav-bar class="nav-bar">
-      <div slot="center">购物车({{length}})</div>
+      <div slot="center">长安优购-购物车({{length}})</div>
     </nav-bar>
    <cart-list></cart-list>
    <cart-bottom-bar ></cart-bottom-bar>

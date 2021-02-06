@@ -1,7 +1,7 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav">
-      <div slot="center">长安优购</div>
+      <div slot="center">长安优购-首页</div>
     </nav-bar>
     <tab-control ref="tabControl2"  :titles='["流行","新款","精选"]'
                  @tabClick="tabClick"
@@ -165,6 +165,8 @@ export default {
 
     getHomeGoods(type){
       const page=this.goods[type].page+1
+      // console.log("page+1")
+      // console.log(page);
       getHomeGoods(type,page).then(res=>{
 
         //注意...语法
@@ -190,7 +192,6 @@ export default {
       this.getHomeGoods(this.currentType)
       //完成了上拉加载更多
       this.$refs.scroll.finishPullUp()
-
       this.$refs.scroll.refresh()
     },
     swiperImageLoad(){
